@@ -1,0 +1,10 @@
+---
+- name: working with special_cases
+  hosts: all
+  tasks:
+    - name: executing python code
+      command: ./python.py
+      ignore_errors: true
+
+    - name: Executing a echo command
+      command: echo "Hi"

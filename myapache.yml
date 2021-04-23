@@ -1,0 +1,41 @@
+---
+- name: Installing and configuring Apache
+  hosts: server1
+  become: true
+  become_user: root
+  tasks:
+    - name: Collecting Public IP address
+      command: curl http://169.254.169.254/latest/meta-data/public-ipv4
+      register: myipaddress
+
+    - name: assigning public IP address
+      set_fact: pub_ip="{{myipaddress.stdout}}"
+
+    - name: Installing apache
+      yum:
+        name: httpd
+        state: present
+
+    - name: Enabling httpd service
+      service:
+        name: httpd
+        enabled: true
+
+    - name: Copying index.html file
+      template:
+        src: index.html
+        dest: /var/www/html/
+      notify: restart apache
+
+    - name: Modifying httpd.conf file
+      replace:
+        path: /etc/httpd/conf/httpd.conf
+        regex: '^#ServerName www.example.com'
+        replace: 'ServerName {{pub_ip}}'
+        notify: restart apache
+
+  handlers:
+    - name: restart apache
+      systemd:
+        name: httpd
+        state: restarted

@@ -1,0 +1,33 @@
+---
+# tasks file for apache
+- name: collecting server public ipaddress
+  become: true
+  become_user: root
+  command: curl http://169.254.169.254/latest/meta-data/public-ipv4
+  register: myipaddress
+
+- name: Assigning public ipaddress
+  set_fact: pub_ip="{{myipaddress.stdout}}"
+
+- name: Installing apache
+  yum:
+    name: httpd
+    state: present
+
+- name: Enabling httpd service
+  service:
+    name: httpd
+    enabled: yes
+
+- name: Copying index.html file
+  template:
+    src: /home/ec2-user/ansible/myapp/roles/apache/templates/index.html
+    dest: /var/www/html/
+  notify: apache restart
+
+- name: modifying httpd.conf file
+  replace:
+    path: /etc/httpd/conf/httpd.conf
+    regexp: '^#ServerName www.example.com'
+    replace: 'ServerName {{pub_ip}}'
+  notify: apache restart

@@ -1,0 +1,16 @@
+---
+- name: Using Loops
+  hosts: all
+  tasks:
+    - name: working with with_items
+      command: echo "{{item}}"
+      with_items: [10,20,30,40,50]
+
+    - name: working with with_items
+      command: echo "Line is {{item}}"
+      with_lines:
+        - cat /etc/passwd
+
+    - name: workign with with_sequence
+      command: echo "My value is {{item}}"
+      with_sequence:  start=1  end=4

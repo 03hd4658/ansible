@@ -1,0 +1,21 @@
+---
+- name: working with when
+  hosts: server1
+  vars:
+    var1: 10
+  tasks:
+    - name: working with == operator
+      command: echo "Hi I am == operator"
+      when: ansible_distribution == "Amazon"
+    - name: working with and operator
+      command: echo "Hi I am and operator"
+      when: ansible_distribution == "Amazon" and ansible_os_family =="RedHat"
+    - name: working with or operator
+      command: echo "Hi I am or operator"
+      when: ansible_distribution == "Amazon" or ansible_os_family == "RedHat"
+    - name: working with < and > operator
+      command: "My value is less than 10"
+      when: var1 <= 10
+      command: "My Value is greater than 10"
+      when: var1 > 10
+    

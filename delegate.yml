@@ -1,0 +1,8 @@
+---
+- name: Delegate Tasks
+  hosts: all
+  serial: 2
+  tasks:
+    - name: getting server name
+      command: hostname
+      delegate_to: server2

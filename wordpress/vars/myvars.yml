@@ -1,0 +1,5 @@
+---
+USERNAME: 'admin'
+PASSWORD: 'admin123'
+DBNAME: 'mydb'
+DBSERVER: '172.31.12.1'
